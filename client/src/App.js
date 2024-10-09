@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header } from './components/Header';
 import { Balance } from './components/Balance';
-import { IncomeExpense } from './components/IncomeExpense';
+import { Incomeexpense } from './components/Incomeexpense';
 import { TransactionList } from './components/TransactionList';
 import { AddTransaction } from './components/Addtransaction';
 
@@ -15,7 +15,7 @@ function App() {
       <Header />
       <div className="container">
         <Balance />
-        <IncomeExpense />
+        <Incomeexpense />
         <TransactionList />
         <AddTransaction />
       </div>
