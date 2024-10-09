@@ -3,7 +3,7 @@ import { Transaction } from './Transaction';
 
 import { GlobalContext } from '../context/GlobalState';
 
-export const Transactionlist = () => {
+export const TransactionList = () => {
   const { transactions, getTransactions } = useContext(GlobalContext);
 
   useEffect(() => {

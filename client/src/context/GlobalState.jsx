@@ -2,47 +2,18 @@ import React, { createContext, useReducer } from 'react';
 import AppReducer from './AppReducer';
 import axios from 'axios';
 
-
 const initialState = {
   transactions: [],
   error: null,
-  loading: true,
-  token: localStorage.getItem('token'), 
-  authError: null 
-};
-
+  loading: true
+}
 export const GlobalContext = createContext(initialState);
-
 
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
-
-  
-  async function loginUser(userData) {
-    try {
-      const res = await axios.post('/api/v1/auth/login', userData);
-
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: res.data.token
-      });
-
-      localStorage.setItem('token', res.data.token); 
-    } catch (err) {
-      dispatch({
-        type: 'AUTH_ERROR',
-        payload: err.response.data.error
-      });
-    }
-  }
-  
   async function getTransactions() {
     try {
-      const res = await axios.get('/api/v1/transactions', {
-        headers: {
-          Authorization: `Bearer ${state.token}` 
-        }
-      });
+      const res = await axios.get('/api/v1/transactions');
 
       dispatch({
         type: 'GET_TRANSACTIONS',
@@ -56,14 +27,9 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
- 
   async function deleteTransaction(id) {
     try {
-      await axios.delete(`/api/v1/transactions/${id}`, {
-        headers: {
-          Authorization: `Bearer ${state.token}` 
-        }
-      });
+      await axios.delete(`/api/v1/transactions/${id}`);
 
       dispatch({
         type: 'DELETE_TRANSACTION',
@@ -77,14 +43,12 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
- 
   async function addTransaction(transaction) {
     const config = {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${state.token}` 
+        'Content-Type': 'application/json'
       }
-    };
+    }
 
     try {
       const res = await axios.post('/api/v1/transactions', transaction, config);
@@ -101,52 +65,14 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  
-  async function registerUser(userData) {
-    try {
-      const res = await axios.post('/api/v1/auth/register', userData);
-
-      dispatch({
-        type: 'REGISTER_SUCCESS',
-        payload: res.data.token
-      });
-
-      localStorage.setItem('token', res.data.token); 
-    } catch (err) {
-      dispatch({
-        type: 'AUTH_ERROR',
-        payload: err.response.data.error
-      });
-    }
-  }
-
-  
- 
-
- 
-  function logout() {
-    console.log('Logout function called');
-    localStorage.removeItem('token'); 
-    dispatch({ type: 'LOGOUT' });
-  }
-
-  return (
-    <GlobalContext.Provider
-      value={{
-        transactions: state.transactions,
-        error: state.error,
-        loading: state.loading,
-        token: state.token,
-        authError: state.authError,
-        getTransactions,
-        deleteTransaction,
-        addTransaction,
-        registerUser,
-        loginUser,
-        logout
-      }}
-    >
-      {children}
-    </GlobalContext.Provider>
-  );
-};
+  return (<GlobalContext.Provider value={{
+    transactions: state.transactions,
+    error: state.error,
+    loading: state.loading,
+    getTransactions,
+    deleteTransaction,
+    addTransaction
+  }}>
+    {children}
+  </GlobalContext.Provider>);
+}
