@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
+const cors = require('cors');
 const morgan = require('morgan');
 const connectDB = require('./config/Db');
 
@@ -12,6 +13,8 @@ const transactions = require('./routes/transactions');
 
 
 const app = express();
+
+app.use(cors()); 
 
 app.use(express.json());
 
