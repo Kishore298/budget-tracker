@@ -168,22 +168,6 @@ select{
   opacity: 1;
 }
 
-.auth-container {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 40px;
-  max-width: 400px;
-  margin: 40px auto;
-}
-
-.auth-container h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-  margin-bottom: 20px;
-}
 
 .form-control {
   margin-bottom: 20px;
@@ -211,6 +195,12 @@ select{
 .form-control input:focus {
   border-color: #9c88ff;
   background-color: #fff;
+}
+@media (max-width: 380px) {
+  .container {
+    width: 90%; 
+    margin: 0 auto;
+  }
 }
 
 
