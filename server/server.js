@@ -21,6 +21,11 @@ app.use(express.json());
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));
 }
+
+app.get('/', (req, res) => {
+    res.send('API is running...');
+});
+
 app.use('/api/v1/transactions',transactions);
 
 const PORT = process.env.PORT || 8000;
