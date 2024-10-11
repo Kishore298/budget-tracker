@@ -21,10 +21,9 @@ exports.getTransactions = async (req, res, next) => {
 
 exports.addTransaction = async (req, res, next) => {
   try {
-    const { text, amount, category} = req.body;
+    const {amount, category} = req.body;
 
     const transaction = await Transaction.create({
-      text,
       amount,
       category,
 

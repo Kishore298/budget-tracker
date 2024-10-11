@@ -112,7 +112,7 @@ select{
 
 .btn {
   cursor: pointer;
-  background-color: #9c88ff;
+  background-color: #07031a;
   box-shadow: var(--box-shadow);
   color: #fff;
   border: 0;
@@ -201,7 +201,7 @@ select{
 }
 
 .form-control input:focus {
-  border-color: #9c88ff;
+  border-color: #2a1690;
   background-color: #fff;
 }
 @media (max-width: 480px) {

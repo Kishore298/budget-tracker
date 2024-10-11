@@ -74,7 +74,7 @@ export const AddTransaction = () => {
             <option value="Travel">Travel</option>
             <option value="Entertainment">Entertainment</option>
             <option value="Utilities">Utilities</option>
-            <option value="Other">Other</option>
+            <option value="Other expenses">Other expenses</option>
           </select>
         </div>
         <button className="btn">Add transaction</button>
