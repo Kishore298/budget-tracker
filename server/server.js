@@ -5,29 +5,25 @@ const cors = require('cors');
 const morgan = require('morgan');
 const connectDB = require('./config/Db');
 
-dotenv.config({path:'./config/config.env'});
+dotenv.config({ path: './config/config.env' });
 
 connectDB();
 
 const transactions = require('./routes/transactions');
-
+const auth = require('./routes/auth'); 
 
 const app = express();
 
-app.use(cors()); 
-
+app.use(cors());
 app.use(express.json());
 
-if(process.env.NODE_ENV === 'development'){
-    app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
 }
 
-app.get('/', (req, res) => {
-    res.send('API is running...');
-});
-
-app.use('/api/v1/transactions',transactions);
+app.use('/api/v1/transactions', transactions);
+app.use('/api/v1/auth', auth); 
 
 const PORT = process.env.PORT || 8000;
 
-app.listen(PORT,console.log(`server running on port ${PORT}`.yellow.bold));
+app.listen(PORT, console.log(`Server running on port ${PORT}`.yellow.bold));

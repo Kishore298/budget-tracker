@@ -1,15 +1,22 @@
 import React, { useState, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
+import { AuthContext } from '../context/AuthContext';
 
 export const AddTransaction = () => {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
-  const [error, setError] = useState('');  
+  const [error, setError] = useState('');
 
   const { addTransaction } = useContext(GlobalContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    if (!isAuthenticated) {
+      setError('You must be logged in to add transactions.');
+      return;
+    }
 
     if (amount === '' || category === '') {
       setError('All fields are required.');
