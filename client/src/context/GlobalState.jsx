@@ -15,7 +15,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function getTransactions() {
     try {
-      const res = await axios.get('/api/v1/transactions');
+      const res = await axios.get('https://budget-tracker-48rj.onrender.com/api/v1/transactions');
 
       dispatch({
         type: 'GET_TRANSACTIONS',
@@ -31,7 +31,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function deleteTransaction(id) {
     try {
-      await axios.delete(`/api/v1/transactions/${id}`);
+      await axios.delete(`https://budget-tracker-48rj.onrender.com/api/v1/transactions/${id}`);
 
       dispatch({
         type: 'DELETE_TRANSACTION',
@@ -53,7 +53,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.post('/api/v1/transactions', transaction, config);
+      const res = await axios.post('https://budget-tracker-48rj.onrender.com/api/v1/transactions', transaction, config);
 
       dispatch({
         type: 'ADD_TRANSACTION',
