@@ -1,52 +1,39 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 const RegistrationForm = () => {
+  const { register, error } = useContext(AuthContext);  
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [localError, setLocalError] = useState(''); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setLocalError('Passwords do not match.');
       return;
     }
     if (!username || !email || !password) {
-      setError('All fields are required.');
+      setLocalError('All fields are required.');
       return;
     }
 
-    try {
-      const res = await axios.post('https://budget-tracker-48rj.onrender.com/api/v1/auth/register', {
-        username,
-        email,
-        password,
-      });
-      setSuccess(res.data.message || 'User registered successfully!');
-      setError('');
-      setUsername('');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed.');
-    }
+    // Register using context
+    register(username, email, password);
   };
 
   return (
     <div className="form-container">
-         <h1 className="header-title">
+      <h1 className="header-title">
         <span className="expense">Expense</span>{" "}
         <span className="tracker">Tracker</span>
       </h1>
       <h2>Register</h2>
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
+      {localError && <div className="error-message">{localError}</div>}
+      {error && <div className="error-message">{error}</div>}  {/* Global error from context */}
       <form onSubmit={handleSubmit}>
         <input
           className="registration-input"
@@ -88,5 +75,7 @@ const RegistrationForm = () => {
 };
 
 export default RegistrationForm;
+
+
 
 

@@ -2,19 +2,26 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
-export const Login = () => {
-  const { login } = useContext(AuthContext);
+const Login = () => {
+  const { login, error: authError, clearError } = useContext(AuthContext); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [localError, setLocalError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLocalError("");  
+    clearError();       
+
+    if (!email || !password) {
+      setLocalError("Both fields are required.");
+      return;
+    }
+
     try {
-      await login(email, password);
-      setError("");
+      await login(email, password);  
     } catch (err) {
-      setError("Invalid credentials");
+      setLocalError("Invalid credentials");
     }
   };
 
@@ -26,7 +33,9 @@ export const Login = () => {
       </h1>
 
       <h2>Login</h2>
-      {error && <p className="error-message">{error}</p>}
+      {localError && <p className="error-message">{localError}</p>}
+      {authError && <p className="error-message">{authError}</p>}
+
       <form onSubmit={handleSubmit}>
         <input
           className="login-input"
@@ -46,9 +55,12 @@ export const Login = () => {
           Login
         </button>
       </form>
+
       <p className="link-text">
         Don't have an account? <Link to="/register">Register here</Link>
       </p>
     </div>
   );
 };
+
+export default Login;

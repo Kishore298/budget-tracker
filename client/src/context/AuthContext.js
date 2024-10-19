@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const initialState = {
   user: null,
@@ -8,7 +9,6 @@ const initialState = {
   isAuthenticated: false,
   error: null,
 };
-
 
 export const AuthContext = createContext(initialState);
 
@@ -23,8 +23,17 @@ const authReducer = (state, action) => {
         isAuthenticated: true,
         loading: false,
       };
+    case 'REGISTER_SUCCESS': 
+      localStorage.setItem('token', action.payload.token);
+      return {
+        ...state,
+        user: action.payload.user,
+        token: action.payload.token,
+        isAuthenticated: true,
+        loading: false,
+      };
     case 'LOGOUT':
-      localStorage.removeItem('token');
+      localStorage.removeItem('token'); 
       return {
         ...state,
         user: null,
@@ -38,6 +47,11 @@ const authReducer = (state, action) => {
         error: action.payload,
         loading: false,
       };
+    case 'CLEAR_ERROR':
+      return {
+        ...state,
+        error: null, 
+      };
     default:
       return state;
   }
@@ -45,37 +59,65 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (state.token) {
+    const token = localStorage.getItem('token');
+    if (token) {
       axios.get('https://budget-tracker-48rj.onrender.com/api/v1/auth/me', {
-        headers: { Authorization: `Bearer ${state.token}` }
+        headers: { Authorization: `Bearer ${token}` },
       })
-        .then(res => {
-          dispatch({
-            type: 'LOGIN_SUCCESS',
-            payload: { user: res.data.user, token: state.token }
-          });
-        })
-        .catch(() => {
-          dispatch({ type: 'AUTH_ERROR', payload: 'Invalid token' });
+      .then(res => {
+        dispatch({
+          type: 'LOGIN_SUCCESS',
+          payload: { user: res.data.user, token },
         });
+      })
+      .catch(() => {
+        dispatch({ type: 'LOGOUT' });
+        navigate('/login'); 
+      });
+    } else {
+      dispatch({ type: 'LOGOUT' });
     }
-  }, [state.token]);
+  }, [navigate]);
 
-  
-  const login = async (email, password) => {
-    try {
-      const res = await axios.post('https://budget-tracker-48rj.onrender.com/api/v1/auth/login', { email, password });
-      dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
-    } catch (error) {
-      dispatch({ type: 'AUTH_ERROR', payload: error.response.data.message });
-    }
-  };
+const login = async (email, password) => {
+  try {
+    const res = await axios.post('https://budget-tracker-48rj.onrender.com/api/v1/auth/login', { email, password });
+    console.log('Login response:', res.data); 
+    dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
+    navigate('/'); 
+  } catch (error) {
+    dispatch({ type: 'AUTH_ERROR', payload: error.response?.data?.message || 'Login failed.' });
+  }
+};
+
+const register = async (username, email, password) => {
+  try {
+    const res = await axios.post('https://budget-tracker-48rj.onrender.com/api/v1/auth/register', {
+      username,
+      email,
+      password,
+    });
+    console.log('Register response:', res.data); 
+    dispatch({ type: 'REGISTER_SUCCESS', payload: res.data });  
+    navigate('/login'); 
+  } catch (error) {
+    dispatch({
+      type: 'AUTH_ERROR',
+      payload: error.response?.data?.message || 'Registration failed.',
+    });
+  }
+};
 
 
   const logout = () => {
     dispatch({ type: 'LOGOUT' });
+    navigate('/login'); 
+  };
+  const clearError = () => {
+    dispatch({ type: 'CLEAR_ERROR' });
   };
 
   return (
@@ -83,10 +125,16 @@ export const AuthProvider = ({ children }) => {
       user: state.user,
       isAuthenticated: state.isAuthenticated,
       loading: state.loading,
+      error: state.error,
       login,
+      register, 
       logout,
+      clearError, 
     }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+
+

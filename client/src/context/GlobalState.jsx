@@ -56,16 +56,16 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function addTransaction(transaction) {
+    const token = localStorage.getItem('token'); 
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}` 
       }
     };
-
+  
     try {
       const res = await axios.post('https://budget-tracker-48rj.onrender.com/api/v1/transactions', transaction, config);
-
       dispatch({
         type: 'ADD_TRANSACTION',
         payload: res.data.data
@@ -77,6 +77,7 @@ export const GlobalProvider = ({ children }) => {
       });
     }
   }
+  
 
   return (
     <GlobalContext.Provider value={{
