@@ -1,14 +1,14 @@
 const express = require('express');
-const { getTransactions, addTransaction, deleteTransaction } = require('../controllers/transactioncontroller');
-const { protect } = require('../middleware/authMiddleware');
-
 const router = express.Router();
+const { getTransactions, addTransaction, deleteTransaction } = require('../controllers/transactioncontroller');
 
-router.route('/')
+router
+  .route('/')
   .get(getTransactions)
-  .post(protect, addTransaction); 
+  .post(addTransaction);
 
-router.route('/:id')
-  .delete(protect, deleteTransaction); 
+router
+  .route('/:id')
+  .delete(deleteTransaction);
 
 module.exports = router;

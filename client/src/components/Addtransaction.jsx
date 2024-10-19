@@ -1,22 +1,15 @@
 import React, { useState, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { AuthContext } from '../context/AuthContext';
 
-export const AddTransaction = () => {
+export const Addtransaction = () => {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [error, setError] = useState('');
 
   const { addTransaction } = useContext(GlobalContext);
-  const { isAuthenticated } = useContext(AuthContext);
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    if (!isAuthenticated) {
-      setError('You must be logged in to add transactions.');
-      return;
-    }
 
     if (amount === '' || category === '') {
       setError('All fields are required.');
@@ -67,21 +60,21 @@ export const AddTransaction = () => {
             required
           >
             <option value="">Select a category</option>
-            <option value="salary">Salary</option>
-            <option value="other income">Other Income</option>
-            <option value="debt">Debt</option>
-            <option value="loan">Loan</option>
-            <option value="emergency">Emergency</option>
-            <option value="savings">Savings</option>
-            <option value="transfer">Transfer</option>
-            <option value="investment">Investment</option>
-            <option value="groceries">Groceries</option>
-            <option value="rent">Rent</option>
+            <option value="Salary">Salary</option>
+            <option value="Other Income">Other Income</option>
+            <option value="Debt">Debt</option>
+            <option value="Loan">Loan</option>
+            <option value="Emergency">Emergency</option>
+            <option value="Savings">Savings</option>
+            <option value="Transfer">Transfer</option>
+            <option value="Investment">Investment</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Rent">Rent</option>
             <option value="Food">Food</option>
             <option value="Travel">Travel</option>
             <option value="Entertainment">Entertainment</option>
             <option value="Utilities">Utilities</option>
-            <option value="Other expenses">Other expenses</option>
+            <option value="Other Expenses">Other Expenses</option>
           </select>
         </div>
         <button className="btn">Add transaction</button>
